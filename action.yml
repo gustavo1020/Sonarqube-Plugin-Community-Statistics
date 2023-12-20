@@ -61,5 +61,5 @@ inputs:
     description: 'port instance host'
     required: false
 runs:
-  using: 'node18'
+  using: 'node16'
   main: 'dist/index.js'
