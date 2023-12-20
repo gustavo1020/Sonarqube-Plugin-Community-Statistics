@@ -9,6 +9,7 @@ const usersAlias: UserAlias[] = JSON.parse(getInput("usersTeam")  || 'qwe')
 const GITHUB_PULL_REQUEST = getInput("pullRequest") || 'valor_predeterminado'
 const GITHUB_BRANCH: string = getInput("branch") || 'valor_predeterminado'
 const GITHUB_TOKEN = getInput("token") 
+const PATH_INFO = getInput("path") 
 const GTIHUB_USER_REVIEW: string = getInput("user") || 'valor_predeterminado'
 const BASE_URL = "https://api.github.com"
 const headers = {
@@ -63,7 +64,7 @@ export async function addReview(value : string, message : string){
 export async function addCommentIssues(newIssues: NewIssuesResponse){
 
     newIssues.issues.forEach(element => {
-        const comments = [{path:element.component.replace(`${element.project}:`,""), line: element.line, body: `${serchSeverity(element.severity)} 
+        const comments = [{path: `${PATH_INFO}` + element.component.replace(`${element.project}:`,""), line: element.line, body: `${serchSeverity(element.severity)} 
         > ${element.message}
         `}]
         const commentBody = {
