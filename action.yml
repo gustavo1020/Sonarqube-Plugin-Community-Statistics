@@ -11,6 +11,9 @@ inputs:
   pullRequest:
     description: 'github pullRequest'
     default: ${{ github.event.number }}
+  path:
+    description: 'github pullRequest'
+    default: "."
   branch:
     description: 'github branch'
     default: ${{ github.base_ref }}
