@@ -19,7 +19,7 @@ inputs:
     default: ${{ github.repository }}
   usersTeam:
     description: 'possibility to request changes in the PR'
-    default: "default"
+    default: '[{"team":"n","discord":"n","github":"n"}]'
   comment:
     description: 'possibility of being able to make comments to the github PRs'
     default: true
