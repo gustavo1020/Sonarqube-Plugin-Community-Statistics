@@ -17,9 +17,9 @@ ${searchPath("codeSmell")} ${searchPath(searchSecurity(sonarqubeData.measure, "n
 
 ### Converage and Duplications
 
-${duplicatedIcon(Number(sonarqubeData.measure.find(x => x.metric == "new_coverage")?.period.value || "0"))} **Coverage** **${sonarqubeData.measure.find(x => x.metric == "new_coverage")?.period.value}**
+${duplicatedIcon(Number(sonarqubeData.measure.find(x => x.metric == "new_coverage")?.period.value || "0"))} **Coverage** **%${sonarqubeData.measure.find(x => x.metric == "new_coverage")?.period.value || 0}**
 
-${coverageIcon(Number(sonarqubeData.measure.find(x => x.metric == "new_duplicated_lines_density")?.period.value || "0"))} **Duplication** **${sonarqubeData.measure.find(x => x.metric == "new_duplicated_lines_density")?.period.value}**
+${coverageIcon(Number(sonarqubeData.measure.find(x => x.metric == "new_duplicated_lines_density")?.period.value || "0"))} **Duplication** **%${sonarqubeData.measure.find(x => x.metric == "new_duplicated_lines_density")?.period.value  || 0}**
 
    `
 }

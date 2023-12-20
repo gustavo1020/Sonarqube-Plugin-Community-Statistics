@@ -63,7 +63,7 @@ export async function addReview(value : string, message : string){
 export async function addCommentIssues(newIssues: NewIssuesResponse){
 
     newIssues.issues.forEach(element => {
-        const comments = [{path:element.component, line: element.line, body: `${serchSeverity(element.severity)} 
+        const comments = [{path:element.component.replace(`${element.project}:`,""), line: element.line, body: `${serchSeverity(element.severity)} 
         > ${element.message}
         `}]
         const commentBody = {
