@@ -1,21 +1,35 @@
 require('dotenv').config()
-import { QualityAnalysisByPR } from './models/postgres'
-import { addReviewers, addReview, githubInit } from './github'
+import { addReviewers, addReview, githubInit,addCommentIssues } from './github'
 import { sonarqubeInit } from './sonarqube'
 import { generateMessage } from './meesage'
 import { insertInto,  postgreInit} from './postgres'
+import { getInput } from '@actions/core';
+
+const ANALYSIS = getInput("analysis") || false
+const COMMENT = getInput("comment") || true
 
 async function main() {
+    console.log("start")
+
     let sonarData = await sonarqubeInit();
     let msg = await generateMessage(sonarData);
-    let githubData = await githubInit();
-    console.log(msg);
-    // let postgreData = await postgreInit();
-    // let postgreInsert = await insertInto(githubData, sonarData);
 
-    // let gh = addReviewers()
-    // let hg = addReview(sonarData.project_status.projectStatus.status, msg)
-    // let fd = addCommentIssues(sonarData.newIssuesResponse)
+    console.log("sonarData")
+
+    if(ANALYSIS == "true"){
+        let githubData = await githubInit();
+        let postgreData = await postgreInit();
+        let postgreInsert = await insertInto(githubData, sonarData);
+        console.log("githubData and postgreData")
+    }
+
+    if(COMMENT == "true"){
+        let ghaddReviewers = addReviewers();
+        let ghaddReview = addReview(sonarData.project_status.projectStatus.status, msg);
+        let ghaddCommentIssues = addCommentIssues(sonarData.newIssuesResponse);
+        console.log("Review")
+    }
+    console.log("END")
     
 }
 

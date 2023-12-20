@@ -17,7 +17,7 @@ require('dotenv').config();
 const axios_1 = __importDefault(require("axios"));
 const core_1 = require("@actions/core");
 const GITHUB_REPOSITORY = (0, core_1.getInput)("repository") || 'valor_predeterminado';
-const usersAlias = JSON.parse((0, core_1.getInput)("usersTeam") || 'valor_predeterminado');
+const usersAlias = JSON.parse((0, core_1.getInput)("usersTeam") || 'qwe');
 const GITHUB_PULL_REQUEST = (0, core_1.getInput)("pullRequest") || 'valor_predeterminado';
 const GITHUB_BRANCH = (0, core_1.getInput)("branch") || 'valor_predeterminado';
 const GITHUB_TOKEN = (0, core_1.getInput)("token");

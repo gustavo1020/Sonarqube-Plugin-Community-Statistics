@@ -13,17 +13,29 @@ require('dotenv').config();
 const github_1 = require("./github");
 const sonarqube_1 = require("./sonarqube");
 const meesage_1 = require("./meesage");
+const postgres_1 = require("./postgres");
+const core_1 = require("@actions/core");
+const ANALYSIS = (0, core_1.getInput)("analysis") || false;
+const COMMENT = (0, core_1.getInput)("comment") || true;
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log("start");
         let sonarData = yield (0, sonarqube_1.sonarqubeInit)();
         let msg = yield (0, meesage_1.generateMessage)(sonarData);
-        let githubData = yield (0, github_1.githubInit)();
-        console.log(msg);
-        // let postgreData = await postgreInit();
-        // let postgreInsert = await insertInto(githubData, sonarData);
-        // let gh = addReviewers()
-        // let hg = addReview(sonarData.project_status.projectStatus.status, msg)
-        // let fd = addCommentIssues(sonarData.newIssuesResponse)
+        console.log("sonarData");
+        if (ANALYSIS == "true") {
+            let githubData = yield (0, github_1.githubInit)();
+            let postgreData = yield (0, postgres_1.postgreInit)();
+            let postgreInsert = yield (0, postgres_1.insertInto)(githubData, sonarData);
+            console.log("githubData and postgreData");
+        }
+        if (COMMENT == "true") {
+            let ghaddReviewers = (0, github_1.addReviewers)();
+            let ghaddReview = (0, github_1.addReview)(sonarData.project_status.projectStatus.status, msg);
+            let ghaddCommentIssues = (0, github_1.addCommentIssues)(sonarData.newIssuesResponse);
+            console.log("Review");
+        }
+        console.log("END");
     });
 }
 main();

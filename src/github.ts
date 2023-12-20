@@ -5,7 +5,7 @@ import { NewIssuesResponse } from './models/sonarqube'
 import { getInput } from '@actions/core';
 
 const GITHUB_REPOSITORY = getInput("repository") || 'valor_predeterminado'
-const usersAlias: UserAlias[] = JSON.parse(getInput("usersTeam")  || 'valor_predeterminado')
+const usersAlias: UserAlias[] = JSON.parse(getInput("usersTeam")  || 'qwe')
 const GITHUB_PULL_REQUEST = getInput("pullRequest") || 'valor_predeterminado'
 const GITHUB_BRANCH: string = getInput("branch") || 'valor_predeterminado'
 const GITHUB_TOKEN = getInput("token") 
