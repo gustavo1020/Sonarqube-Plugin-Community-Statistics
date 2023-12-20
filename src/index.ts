@@ -24,9 +24,9 @@ async function main() {
     }
 
     if(COMMENT == "true"){
-        let ghaddReviewers = addReviewers();
-        let ghaddReview = addReview(sonarData.project_status.projectStatus.status, msg);
-        let ghaddCommentIssues = addCommentIssues(sonarData.newIssuesResponse);
+        let ghaddReviewers = await addReviewers();
+        let ghaddReview = await addReview(sonarData.project_status.projectStatus.status, msg);
+        let ghaddCommentIssues = await addCommentIssues(sonarData.newIssuesResponse);
         console.log("Review")
     }
     console.log("END")
