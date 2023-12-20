@@ -1,13 +1,15 @@
 require('dotenv').config()
 import axios from 'axios';
 import { PullRequestDataCommits, UserAlias } from './models/github'
+import { NewIssuesResponse } from './models/sonarqube'
+import { getInput } from '@actions/core';
 
-const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY || 'valor_predeterminado'
-// const usersAlias: UserAlias[] = process.env.GITHUB_USERS || 'valor_predeterminado'
-const GITHUB_PULL_REQUEST = process.env.GITHUB_PULL_REQUEST || 'valor_predeterminado'
-const GITHUB_BRANCH: string = process.env.GITHUB_BRANCH || 'valor_predeterminado'
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN 
-const GTIHUB_USER_REVIEW: string = process.env.GTIHUB_USER_REVIEW || 'valor_predeterminado'
+const GITHUB_REPOSITORY = getInput("repository") || 'valor_predeterminado'
+const usersAlias: UserAlias[] = JSON.parse(getInput("usersTeam")  || 'valor_predeterminado')
+const GITHUB_PULL_REQUEST = getInput("pullRequest") || 'valor_predeterminado'
+const GITHUB_BRANCH: string = getInput("branch") || 'valor_predeterminado'
+const GITHUB_TOKEN = getInput("token") 
+const GTIHUB_USER_REVIEW: string = getInput("user") || 'valor_predeterminado'
 const BASE_URL = "https://api.github.com"
 const headers = {
     Authorization: `Bearer ${GITHUB_TOKEN}`,
@@ -17,19 +19,18 @@ const headers = {
 
 
 
-// export async function githubInit(): Promise<PullRequestDataCommits>{
-//     const pull_request_commits_response = await axios.get<PullRequestDataCommits[]>(BASE_URL + `/repos/${GITHUB_REPOSITORY}/pulls/${GITHUB_PULL_REQUEST}/commits`, { headers })
+export async function githubInit(): Promise<PullRequestDataCommits>{
+    const pull_request_commits_response = await axios.get<PullRequestDataCommits[]>(BASE_URL + `/repos/${GITHUB_REPOSITORY}/pulls/${GITHUB_PULL_REQUEST}/commits`, { headers })
 
-//     const pull_request_reponse  = await axios.get(BASE_URL + `/repos/${GITHUB_REPOSITORY}/pulls/${GITHUB_PULL_REQUEST}`, { headers })
+    const pull_request_reponse  = await axios.get(BASE_URL + `/repos/${GITHUB_REPOSITORY}/pulls/${GITHUB_PULL_REQUEST}`, { headers })
 
-//     const githubData : PullRequestDataCommits = { title : pull_request_reponse.data.title, author : pull_request_reponse.data.user.login, amount : pull_request_commits_response.data.length,
-//     branch: GITHUB_BRANCH, repository: GITHUB_REPOSITORY, numberPR: GITHUB_PULL_REQUEST, team: usersAlias.find(x => x.github == pull_request_reponse.data.user.login)?.team || 'valor_predeterminado'}
+    const githubData : PullRequestDataCommits = { title : pull_request_reponse.data.title, author : pull_request_reponse.data.user.login, amount : pull_request_commits_response.data.length,
+    branch: GITHUB_BRANCH, repository: GITHUB_REPOSITORY, numberPR: GITHUB_PULL_REQUEST, team: usersAlias.find(x => x.github == pull_request_reponse.data.user.login)?.team || 'valor_predeterminado'}
 
-//     return githubData
-// }
+    return githubData
+}
 
 
-// funciona 
 export async function addReviewers(){
     const requestBody = {
         reviewers: [GTIHUB_USER_REVIEW],
@@ -59,19 +60,35 @@ export async function addReview(value : string, message : string){
     });
 }
 
-export async function addCommentIssues(){
+export async function addCommentIssues(newIssues: NewIssuesResponse){
 
-    const commentBody = {
-        body: 'Este es mi comentario sobre las líneas de código.',
-        path: 'ruta/del/archivo.txt',
-        position: 1,
-    };
-
-    const review = axios.post(BASE_URL + `/repos/${GITHUB_REPOSITORY}/pulls/${GITHUB_PULL_REQUEST}/comments`, commentBody, { headers })
-    .then((response) => {
-        console.log('Comentario agregado con éxito al pull request.');
+    newIssues.issues.forEach(element => {
+        const comments = [{path:element.component, line: element.line, body: `${serchSeverity(element.severity)} 
+        > ${element.message}
+        `}]
+        const commentBody = {
+            body: '',
+            event: "COMMENT",
+            comments: comments
+        };
+    
+        const review = axios.post(BASE_URL + `/repos/${GITHUB_REPOSITORY}/pulls/${GITHUB_PULL_REQUEST}/reviews`, commentBody, { headers })
+        .then((response) => {
+            console.log('Comentario agregado con éxito al pull request.');
+        })
+        .catch((error) => {
+            console.error('Error al agregar el comentario al pull request:', error.response?.data || error.message);
+        });
     })
-    .catch((error) => {
-        console.error('Error al agregar el comentario al pull request:', error.response?.data || error.message);
-    });
+}
+
+
+function serchSeverity (value : string) : string {
+
+    if(value == "INFO") return "> [!TIP]"
+    if(value == "MINOR") return "> [!TIP]"
+    if(value == "MAJOR") return "> [!IMPORTANT]"
+    if(value == "CRITICAL") return "> [!WARNING]"
+    if(value == "BLOCKER") return "> [!CAUTION]"
+    return "> [!TIP]"
 }

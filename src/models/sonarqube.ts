@@ -31,10 +31,6 @@ interface MetricMeasure {
 }
 
 
-interface MetricIssues {
-    metric: string;
-    history: {key:string, severity:string, component:string, project: string, line:number, message:string, debt:string, author: string, creationDate:string, type:string}[];
-}
 
 export interface MetricFacets {
     property: string;
@@ -46,7 +42,7 @@ export interface HistoryIssuesResponse {
 }
 
 export interface NewIssuesResponse {
-    issues: MetricIssues[];
+    issues: {key:string, severity:string, component:string, project: string, line:number, message:string, debt:string, author: string, creationDate:string, type:string}[];
     facets: MetricFacets[];
 
 }

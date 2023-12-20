@@ -10,7 +10,6 @@ export interface PullRequestDataCommits {
 
 export interface UserAlias {
     team:string;
-    youtrack: string;
     discord: string;
     github: string;
 }

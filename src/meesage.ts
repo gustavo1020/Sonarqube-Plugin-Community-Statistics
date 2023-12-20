@@ -2,7 +2,7 @@ import {SonarqubeData, MetricFacets, Measure } from './models/sonarqube'
 
 export function generateMessage (sonarqubeData : SonarqubeData) : string {
 
-    return `## Quality Gate ${sonarqubeData.project_status.projectStatus.status == "OK" ? "Passed" : "Failed"}   ![icons8-approval-24](https://github.com/gustavo1020/-release-version-/assets/49031933/b182a9f0-db36-484d-8f83-c3e3b42a6ebd) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![sonarqube 256x63 (1)](https://github.com/gustavo1020/-release-version-/assets/49031933/27434a7b-6a02-4686-a96a-57ecc73d5a85) &nbsp;&nbsp;  x  &nbsp;&nbsp;![c54422d50dc06739a00342935698799b (1)](https://github.com/gustavo1020/-release-version-/assets/49031933/0b02d722-ec4e-4397-b4c7-18108e8efba5)
+    return `## Quality Gate ${sonarqubeData.project_status.projectStatus.status == "OK" ? "Passed" : "Failed"}   ${searchPath(sonarqubeData.project_status.projectStatus.status == "OK" ? "approv" : "rejected")} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![sonarqube 256x63 (1)](https://github.com/gustavo1020/-release-version-/assets/49031933/27434a7b-6a02-4686-a96a-57ecc73d5a85) &nbsp;&nbsp;  x  &nbsp;&nbsp;![c54422d50dc06739a00342935698799b (1)](https://github.com/gustavo1020/-release-version-/assets/49031933/0b02d722-ec4e-4397-b4c7-18108e8efba5)
 
 ### Additional information
 *The following metrics might not affect the Quality Gate status but improving them will improve your project code quality.*
@@ -17,15 +17,15 @@ ${searchPath("codeSmell")} ${searchPath(searchSecurity(sonarqubeData.measure, "n
 
 ### Converage and Duplications
 
-${duplicatedIcon(Number(sonarqubeData.measure.find(x => x.metric == "new_coverage")?.period.value || "0"))} **Coverage**
+${duplicatedIcon(Number(sonarqubeData.measure.find(x => x.metric == "new_coverage")?.period.value || "0"))} **Coverage** **${sonarqubeData.measure.find(x => x.metric == "new_coverage")?.period.value}**
 
-${coverageIcon(Number(sonarqubeData.measure.find(x => x.metric == "new_duplicated_lines_density")?.period.value || "0"))} **Duplication**
+${coverageIcon(Number(sonarqubeData.measure.find(x => x.metric == "new_duplicated_lines_density")?.period.value || "0"))} **Duplication** **${sonarqubeData.measure.find(x => x.metric == "new_duplicated_lines_density")?.period.value}**
 
    `
 }
 
 function searchPath(value : string) : string{
-    return `![${value}](../img/${value}.png)`
+    return `![${value}](https://raw.githubusercontent.com/gustavo1020/Sonarqube-Plugin-Community-Statistics/main/img/${value}.png)`
 }
 
 function searchSecurity(value : Measure[], search: string) : string{

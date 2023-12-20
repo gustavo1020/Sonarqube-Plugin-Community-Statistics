@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { HistoryIssuesResponse, NewIssuesResponse, PullRequestStatisticsResponse, SonarqubeData } from './models/sonarqube'
-import { generateMessage } from './meesage'
 require('dotenv').config();
+import {getInput } from '@actions/core';
 
-const SONAR_TOKEN = process.env.SONAR_TOKEN || 'undefined'
-const SONAR_URL = process.env.SONAR_URL || 'undefined'
-const SONAR_KEY = process.env.SONAR_KEY || 'undefined'
+const SONAR_TOKEN = getInput("sonarToken") || 'undefined'
+const SONAR_URL = getInput("sonarURL") || 'undefined'
+const SONAR_KEY = getInput("sonarKey") || 'undefined'
 const authorization = 'Basic ' + btoa(SONAR_TOKEN + ':' + '');
 const headers = {
     'Accept': 'application/json',
