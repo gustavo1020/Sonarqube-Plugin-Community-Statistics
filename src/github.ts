@@ -64,6 +64,7 @@ export async function addReview(value : string, message : string){
 export async function addCommentIssues(newIssues: NewIssuesResponse){
 
     newIssues.issues.forEach(element => {
+        const message = ``;
         const comments = [{path: `${PATH_INFO}` + element.component.replace(`${element.project}:`,""), line: element.line, body: `${serchSeverity(element.severity)} 
         > ${element.message}
         `}]
@@ -78,6 +79,7 @@ export async function addCommentIssues(newIssues: NewIssuesResponse){
             console.log('Comentario agregado con éxito al pull request.');
         })
         .catch((error) => {
+            const messageError = addReview("OK", createMessageError(element))
             console.error('Error al agregar el comentario al pull request:', error.response?.data || error.message);
         });
     })
@@ -92,4 +94,12 @@ function serchSeverity (value : string) : string {
     if(value == "CRITICAL") return "> [!WARNING]"
     if(value == "BLOCKER") return "> [!CAUTION]"
     return "> [!TIP]"
+}
+
+
+
+function createMessageError (element : any): string{
+    return `${element.severity}
+    > Issue detectadas no pertenecientes al código agregado. Esto podría deberse a la desactualización del pull request con la rama principal. Posibles soluciones(git merge ${GITHUB_BRANCH} o arreglar el siguiente issue en el path ${element.component} line ${element.line} message ${element.message})
+    `
 }
