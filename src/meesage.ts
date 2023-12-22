@@ -15,7 +15,7 @@ ${searchPath("vulnerability")} ${searchPath(searchSecurity(sonarqubeData.measure
 
 ${searchPath("codeSmell")} ${searchPath(searchSecurity(sonarqubeData.measure, "new_maintainability_rating"))} **${searchIssuesCount(sonarqubeData.newIssuesResponse.facets, "CODE_SMELL")}** **Code Smells**
 
-### Converage and Duplications
+### Coverage and Duplications
 
 ${duplicatedIcon(Number(sonarqubeData.measure.find(x => x.metric == "new_coverage")?.period.value || "0"))} **Coverage** **%${sonarqubeData.measure.find(x => x.metric == "new_coverage")?.period.value || 0}**
 
