@@ -100,6 +100,6 @@ function serchSeverity (value : string) : string {
 
 function createMessageError (element : any): string{
     return `${element.severity}
-    > Issue detectadas no pertenecientes al código agregado. Esto podría deberse a la desactualización del pull request con la rama principal. Posibles soluciones(git merge ${GITHUB_BRANCH} o arreglar el siguiente issue en el path ${element.component} line ${element.line} message ${element.message})
+    > Issue detectado no perteneciente al código agregado. Esto podría deberse a la desactualización del pull request con la rama principal. Posibles soluciones(git merge ${GITHUB_BRANCH} o arreglar el siguiente issue en el path ${element.component} line ${element.line} message ${element.message})
     `
 }
